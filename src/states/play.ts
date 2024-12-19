@@ -65,21 +65,20 @@ export async function play(c: Context): Promise<Context> {
 
   function score() {
     return `
-		スコア: ${c.score.get().score}
-		ハイスコア: ${c.score.get().highscore}
+      スコア: ${c.score.get().score}
+      ハイスコア: ${c.score.get().highscore}
 	  `;
   }
   const score_text = new Text({
     text: score(),
     style: new TextStyle({
-      fontFamily: "monospace",
-      fontSize: c.screen.width / 35,
+      fontSize: Math.max(c.screen.height / 25, 12),
       fill: 0xffffff,
     }),
   });
-  score_text.anchor.set(0.5);
-  score_text.x = score_text.width / 2;
-  score_text.y = c.app.screen.height / 10;
+  score_text.scale.set((c.screen.height / 25 / score_text.height) * 3);
+  score_text.anchor.set(0);
+  score_text.x = score_text.y = score_text.height / 3;
   container.addChild(score_text);
 
   let rising = false;
@@ -91,20 +90,24 @@ export async function play(c: Context): Promise<Context> {
   bg.y = 0;
   bg.interactive = true;
   bg.on("pointerdown", () => {
-    rising = true;
+    if (!rising && !container.destroyed) {
+      rising = true;
+    }
   });
   bg.on("pointerup", () => {
-    rising = false;
+    if (rising && !container.destroyed) {
+      rising = false;
+    }
   });
   container.addChild(bg);
 
   window.addEventListener("keydown", (e) => {
-    if (e.key === " ") {
+    if (e.key === " " && !rising && !container.destroyed) {
       rising = true;
     }
   });
   window.addEventListener("keyup", (e) => {
-    if (e.key === " ") {
+    if (e.key === " " && rising && !container.destroyed) {
       rising = false;
     }
   });
@@ -175,7 +178,7 @@ export async function play(c: Context): Promise<Context> {
       }
     });
 
-    if (ticker.lastTime - last > 10 ** 3.45) {
+    if (ticker.lastTime - last > c.app.ticker.FPS * 120) {
       const y = circle_y();
       const circle = await create_circle(c, { y });
       container.addChild(circle);

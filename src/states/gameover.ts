@@ -7,10 +7,11 @@ export async function gameover(c: Context): Promise<Context> {
   const text = new Text({
     text: "ゲームオーバー",
     style: {
-      fontSize: c.screen.width / 20,
+      fontSize: Math.max(c.screen.height / 10, 24),
       fill: 0xffffff,
     },
   });
+  text.scale.set(c.screen.height / 10 / text.height);
   text.anchor.set(0.5);
   text.x = c.app.screen.width / 2;
   text.y = c.app.screen.height / 2 - c.screen.height / 6;
@@ -23,11 +24,11 @@ export async function gameover(c: Context): Promise<Context> {
       ハイスコア: ${score.highscore}
     `,
     style: new TextStyle({
-      fontFamily: "monospace",
-      fontSize: c.screen.width / 30,
+      fontSize: Math.max(c.screen.height / 20, 12),
       fill: 0xffffff,
     }),
   });
+  score_text.scale.set((c.screen.height / 20 / score_text.height) * 3);
   score_text.anchor.set(0.5);
   score_text.x = c.app.screen.width / 2 - score_text.width / 4;
   score_text.y = c.app.screen.height / 2;
@@ -36,10 +37,11 @@ export async function gameover(c: Context): Promise<Context> {
   const retry_text = new Text({
     text: "タップ・スペースキーでリトライ",
     style: {
-      fontSize: c.screen.width / 25,
+      fontSize: Math.max(c.screen.height / 25, 12),
       fill: 0xffffff,
     },
   });
+  retry_text.scale.set(c.screen.height / 25 / retry_text.height);
   retry_text.anchor.set(0.5);
   retry_text.x = c.app.screen.width / 2;
   retry_text.y = c.app.screen.height / 2 + c.screen.height / 4;

@@ -8,10 +8,11 @@ export async function menu(c: Context): Promise<Context> {
   const text = new Text({
     text: "タップ・スペースキーでスタート",
     style: {
-      fontSize: c.screen.width / 20,
+      fontSize: Math.max(c.app.screen.height / 10, 24),
       fill: 0xffffff,
     },
   });
+  text.scale.set(c.app.screen.height / 10 / text.height);
   text.anchor.set(0.5);
   text.x = c.app.screen.width / 2;
   text.y = c.app.screen.height / 2;
@@ -20,10 +21,11 @@ export async function menu(c: Context): Promise<Context> {
   const rule = new Text({
     text: "空中のリングをくぐってスコアを稼げ！",
     style: {
-      fontSize: c.screen.width / 30,
+      fontSize: Math.max(c.app.screen.height / 20, 12),
       fill: 0xffffff,
     },
   });
+  rule.scale.set(c.app.screen.height / 20 / rule.height);
   rule.anchor.set(0.5);
   rule.x = c.app.screen.width / 2;
   rule.y = text.y + text.height * 2;

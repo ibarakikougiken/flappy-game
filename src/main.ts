@@ -50,7 +50,7 @@ export async function load_assaet(
 }
 
 export function speed(c: Context) {
-  const speed = c.screen.width / 500;
+  const speed = c.screen.width / 10 / c.app.ticker.FPS;
   return speed;
 }
 
@@ -76,6 +76,8 @@ async function create_app(): Promise<Context> {
   });
 
   app.ticker.speed = 1;
+  app.ticker.maxFPS = 60;
+  app.ticker.minFPS = 60;
 
   document.body.appendChild(app.canvas);
 
@@ -104,7 +106,6 @@ async function create_stage(c: Context): Promise<Context> {
     g.y = c.screen.height - ground.height / 2;
     container.addChild(g);
   }
-  c.app.stage.addChild(container);
 
   c.app.ticker.add(() => {
     if (container.destroyed) return;
@@ -113,6 +114,8 @@ async function create_stage(c: Context): Promise<Context> {
       container.x += ground_width;
     }
   });
+
+  c.app.stage.addChild(container);
 
   return c;
 }
