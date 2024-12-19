@@ -125,7 +125,7 @@ export async function play(c: Context): Promise<Context> {
   c.app.ticker.add(() => {
     if (container.destroyed) return;
     if (rising) {
-      character.y -= c.screen.height / 140;
+      character.y -= speed(c) * 2;
       acceleration = INITIAL_ACCELERATION;
       character.rotation = -0.3;
     } else {
@@ -148,7 +148,7 @@ export async function play(c: Context): Promise<Context> {
     for (let i = 0; i < n; i++) {
       sum += Math.max(y_min, Math.min(y_max, Math.random() * c.screen.height));
     }
-    return sum / n; // ちょっとだけ程度正規分布に従うコクのある乱数
+    return sum / n; // ちょっとだけ正規分布に従うコクのある乱数
   }
   const circles: { x: number; y: number }[] = [];
   const circle_r = circle_radius(c);
@@ -157,17 +157,14 @@ export async function play(c: Context): Promise<Context> {
   c.app.ticker.add(async (ticker: { lastTime: number }) => {
     if (container.destroyed) return;
 
-    circles.map(async (circle, index) => {
+    circles.map((circle, index) => {
       if (
         character.x + character.width / 2 > circle.x - circle_r &&
-        character.x - character.width / 2 < circle.x + circle_r
+        character.x - character.width / 2 < circle.x + circle_r &&
+        (character.y + character.height / 2 > circle.y + circle_r ||
+          character.y - character.height / 2 < circle.y - circle_r)
       ) {
-        if (
-          character.y - character.height / 4 < circle.y - circle_r ||
-          character.y + character.height / 4 > circle.y + circle_r
-        ) {
-          end_game();
-        }
+        end_game();
       }
 
       circle.x -= speed(c);
@@ -178,7 +175,7 @@ export async function play(c: Context): Promise<Context> {
       }
     });
 
-    if (ticker.lastTime - last > c.app.ticker.FPS * 120) {
+    if (ticker.lastTime - last > c.app.ticker.FPS * 160) {
       const y = circle_y();
       const circle = await create_circle(c, { y });
       container.addChild(circle);
