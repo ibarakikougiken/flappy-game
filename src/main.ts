@@ -40,8 +40,8 @@ class score {
 }
 
 const assets = {
-  character: "../assets/character.png",
-  ground: "../assets/maptile_jimen_sogen_02_center.png",
+  character: "../flappy-game/assets/character.png",
+  ground: "../flappy-game/assets/maptile_jimen_sogen_02_center.png",
 };
 export async function load_assaet(
   asset: keyof typeof assets
